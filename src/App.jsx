@@ -61,24 +61,20 @@ const router = createBrowserRouter([
 			{
 				index: true,
 				element: (
-					<ProtectedRoute>
-						<Suspense fallback={<LoadingSpinner />}>
-							<Home />
-							<MainSlider />
-							<CategorySlider />
-							<RecentProducts />
-						</Suspense>
-					</ProtectedRoute>
+					<Suspense fallback={<LoadingSpinner />}>
+						<Home />
+						<MainSlider />
+						<CategorySlider />
+						<RecentProducts />
+					</Suspense>
 				),
 			},
 			{
 				path: "brands",
 				element: (
-					<ProtectedRoute>
-						<Suspense fallback={<LoadingSpinner />}>
-							<Brands />
-						</Suspense>
-					</ProtectedRoute>
+					<Suspense fallback={<LoadingSpinner />}>
+						<Brands />
+					</Suspense>
 				),
 			},
 			{
@@ -94,41 +90,25 @@ const router = createBrowserRouter([
 			{
 				path: "categories",
 				element: (
-					<ProtectedRoute>
-						<Suspense fallback={<LoadingSpinner />}>
-							<Categories />
-						</Suspense>
-					</ProtectedRoute>
+					<Suspense fallback={<LoadingSpinner />}>
+						<Categories />
+					</Suspense>
 				),
 			},
 			{
 				path: "product-details/:id/:category",
 				element: (
-					<ProtectedRoute>
-						<Suspense fallback={<LoadingSpinner />}>
-							<ProductDetails />
-						</Suspense>
-					</ProtectedRoute>
+					<Suspense fallback={<LoadingSpinner />}>
+						<ProductDetails />
+					</Suspense>
 				),
 			},
-			// {
-			// 	path: "products",
-			// 	element: (
-			// 		<ProtectedRoute>
-			// 			<Suspense fallback={<LoadingSpinner />}>
-			// 				<Products />
-			// 			</Suspense>
-			// 		</ProtectedRoute>
-			// 	),
-			// },
 			{
 				path: "profile",
 				element: (
-					<ProtectedRoute>
-						<Suspense fallback={<LoadingSpinner />}>
-							<Profile />
-						</Suspense>
-					</ProtectedRoute>
+					<Suspense fallback={<LoadingSpinner />}>
+						<Profile />
+					</Suspense>
 				),
 			},
 			{

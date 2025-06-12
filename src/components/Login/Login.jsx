@@ -1,41 +1,31 @@
 /** @format */
 import React from "react";
-import classes from "./Login.module.css";
-import { FloatingLabel, Button, Alert } from "flowbite-react";
 import { useFormik } from "formik";
 import { HiInformationCircle } from "react-icons/hi";
 import * as Yup from "yup";
 import axios from "axios";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import { AuthContext } from "../../Context/AuthContext.jsx";
 import { Helmet } from "react-helmet-async";
+import { AlertTriangle, Mail, Lock, Loader2 } from "lucide-react";
 
 export default function Login() {
 	const navigate = useNavigate();
 	const [error, setError] = useState(null);
-	const [isLoadeing, setLoading] = useState(false);
+	const [isLoading, setLoading] = useState(false);
 	const { setAuthToken } = useContext(AuthContext);
+
 	const initialValues = {
 		email: "",
 		password: "",
 	};
 
 	const validationSchema = Yup.object().shape({
-		// Email Validation
 		email: Yup.string()
 			.email("Invalid email address")
 			.required("Email is required"),
 		password: Yup.string().required("Password is required"),
-		// 	.min(8, "Password must be at least 8 characters")
-		// 	.matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-		// 	.matches(/[a-z]/, "Password must contain at least one lowercase letter")
-		// 	.matches(/[0-9]/, "Password must contain at least one number")
-		// 	.matches(
-		// 		/[@$!%*?&]/,
-		// 		"Password must contain at least one special character (@, $, !, %, *, ?, &)"
-		// 	)
-		// 	.required("Password is required"),
 	});
 
 	const formik = useFormik({
@@ -43,20 +33,13 @@ export default function Login() {
 		validationSchema,
 		onSubmit: async (values) => {
 			setLoading(true);
-
 			try {
 				const response = await axios.post(
 					"https://ecommerce.routemisr.com/api/v1/auth/signin",
 					values
 				);
-
-				// ✅ Store token in localStorage
 				localStorage.setItem("token", response.data.token);
-
-				// ✅ Update AuthContext state
 				setAuthToken(response.data.token);
-
-				// ✅ Navigate to Home after login
 				navigate("/");
 			} catch (error) {
 				console.error("Error:", error.response?.data || error.message);
@@ -69,77 +52,133 @@ export default function Login() {
 
 	return (
 		<>
-			{" "}
 			<Helmet>
-				<title>Login</title>
-				<meta name='description' content='Welcome to our online store' />
+				<title>Login | NestShop</title>
+				<meta name='description' content='Login to your NestShop account' />
 			</Helmet>
-			;
-			<section className={`${classes.Login}`}>
-				<div className='container mx-auto px-4'>
-					<div className='space-y-4 max-w-lg mx-auto py-20'>
-						<h2 className='text-4xl font-bold mb-6'>Login</h2>
+
+			<section className='min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50 py-12 px-4'>
+				<div className='w-full max-w-md'>
+					{/* Card Container */}
+					<div className='bg-white rounded-2xl shadow-xl p-8 border border-slate-100'>
+						{/* Header */}
+						<div className='text-center mb-8'>
+							<h1 className='text-3xl font-bold text-slate-900 mb-2'>
+								Welcome Back
+							</h1>
+							<p className='text-slate-600'>Please sign in to your account</p>
+						</div>
+
+						{/* Error Alert */}
 						{error && (
-							<Alert
-								color='failure'
-								icon={HiInformationCircle}
-								className='mb-3'>
-								{error}
-							</Alert>
+							<div className='mb-6 p-4 rounded-xl bg-red-50 border border-red-100 flex items-start gap-3'>
+								<AlertTriangle className='w-5 h-5 text-red-500 mt-0.5 flex-shrink-0' />
+								<p className='text-sm text-red-600'>{error}</p>
+							</div>
 						)}
-						<form onSubmit={formik.handleSubmit}>
+
+						{/* Login Form */}
+						<form onSubmit={formik.handleSubmit} className='space-y-6'>
 							{/* Email Field */}
-							<FloatingLabel
-								variant='outlined'
-								label='Email'
-								type='email'
-								name='email'
-								onChange={formik.handleChange}
-								onBlur={formik.handleBlur}
-								value={formik.values.email}
-							/>
-							{formik.touched.email && formik.errors.email && (
-								<Alert
-									color='failure'
-									icon={HiInformationCircle}
-									className='mb-3'>
-									{formik.errors.email}
-								</Alert>
-							)}
+							<div className='space-y-2'>
+								<label
+									htmlFor='email'
+									className='block text-sm font-medium text-slate-700'>
+									Email Address
+								</label>
+								<div className='relative'>
+									<div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+										<Mail className='h-5 w-5 text-slate-400' />
+									</div>
+									<input
+										id='email'
+										name='email'
+										type='email'
+										onChange={formik.handleChange}
+										onBlur={formik.handleBlur}
+										value={formik.values.email}
+										className={`block w-full pl-10 pr-3 py-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
+											formik.touched.email && formik.errors.email
+												? "border-red-300"
+												: "border-slate-200"
+										}`}
+										placeholder='Enter your email'
+									/>
+								</div>
+								{formik.touched.email && formik.errors.email && (
+									<p className='text-sm text-red-600 mt-1'>
+										{formik.errors.email}
+									</p>
+								)}
+							</div>
 
 							{/* Password Field */}
-							<FloatingLabel
-								variant='outlined'
-								label='Password'
-								type='password'
-								name='password'
-								onChange={formik.handleChange}
-								onBlur={formik.handleBlur}
-								value={formik.values.password}
-							/>
-							{formik.touched.password && formik.errors.password && (
-								<Alert
-									color='failure'
-									icon={HiInformationCircle}
-									className='mb-3'>
-									{formik.errors.password}
-								</Alert>
-							)}
+							<div className='space-y-2'>
+								<label
+									htmlFor='password'
+									className='block text-sm font-medium text-slate-700'>
+									Password
+								</label>
+								<div className='relative'>
+									<div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+										<Lock className='h-5 w-5 text-slate-400' />
+									</div>
+									<input
+										id='password'
+										name='password'
+										type='password'
+										onChange={formik.handleChange}
+										onBlur={formik.handleBlur}
+										value={formik.values.password}
+										className={`block w-full pl-10 pr-3 py-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
+											formik.touched.password && formik.errors.password
+												? "border-red-300"
+												: "border-slate-200"
+										}`}
+										placeholder='Enter your password'
+									/>
+								</div>
+								{formik.touched.password && formik.errors.password && (
+									<p className='text-sm text-red-600 mt-1'>
+										{formik.errors.password}
+									</p>
+								)}
+							</div>
+
 							{/* Submit Button */}
-							<Button
-								color='blue'
-								className='mt-5'
+							<button
 								type='submit'
 								disabled={
-									!formik.values.email || !formik.values.password || isLoadeing
-								}>
-								{isLoadeing ? (
-									<i className='fa fa-spinner fa-spin'></i>
+									!formik.values.email || !formik.values.password || isLoading
+								}
+								className={`w-full flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${
+									(!formik.values.email ||
+										!formik.values.password ||
+										isLoading) &&
+									"opacity-50 cursor-not-allowed"
+								}`}>
+								{isLoading ? (
+									<>
+										<Loader2 className='w-5 h-5 mr-2 animate-spin' />
+										Signing in...
+									</>
 								) : (
-									"Login"
+									"Sign in"
 								)}
-							</Button>
+							</button>
 						</form>
+
+						{/* Footer */}
+						<div className='mt-6 text-center'>
+							<p className='text-sm text-slate-600'>
+								Don't have an account?{" "}
+								<button
+									onClick={() => navigate("/register")}
+									className='font-medium text-blue-600 hover:text-blue-500'>
+									Sign up
+								</button>
+							</p>
+						</div>
 					</div>
 				</div>
 			</section>

@@ -9,7 +9,6 @@ import CallBack from "../CallBack/CallBack";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Categories() {
-	// Use React Query to fetch categories
 	const {
 		data: categoriesData,
 		isLoading,
