@@ -86,7 +86,7 @@ export default function CustomNavbar() {
 							<span className='text-white font-bold text-lg lg:text-xl'>N</span>
 						</div>
 						<span className='text-xl lg:text-2xl font-bold bg-gradient-to-r from-teal-600 via-cyan-600 to-teal-700 bg-clip-text text-transparent group-hover:from-teal-700 group-hover:via-cyan-700 group-hover:to-teal-800 transition-all duration-300'>
-							NestShop
+				ShopNest
 						</span>
 					</NavLink>
 
